@@ -63,7 +63,7 @@ public class WikiCrawlerTest {
 
 		String res = wc.crawl(true);
 		assertThat(url1.equals(res), is(true));
-		assertThat(wc.queueSize(), is(396));
+		assertThat(wc.queueSize(), is(490));
 
 		res = wc.crawl(true);
 		assertThat(url2.equals(res), is(true));

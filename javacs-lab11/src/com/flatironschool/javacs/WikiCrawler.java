@@ -54,8 +54,40 @@ public class WikiCrawler {
 	 * @throws IOException
 	 */
 	public String crawl(boolean testing) throws IOException {
-        // FILL THIS IN!
-		return null;
+
+		if (queue.isEmpty())
+			return source;
+
+		String url = queue.poll();
+
+		Elements paragraphs;
+
+		if (testing) {
+			paragraphs = wf.readWikipedia(url);
+		} else {
+			paragraphs = wf.fetchWikipedia(url);
+			if (index.isIndexed(url))
+				return null;
+		}
+
+		index.indexPage(url, paragraphs);
+
+
+		int c = 0;
+		c++;
+
+		Elements links = paragraphs.select("a");
+
+		for (Element l : links) {
+			if (l.attr("href").startsWith("/wiki") && !queue.contains(l.attr("abs:href")) && !l.attr("href").contains(":")) {
+				queue.offer(l.attr("abs:href"));
+				System.out.println(l.attr("abs:href"));
+			}
+		}
+
+		System.out.println(queue.size());
+
+		return source;
 	}
 	
 	/**
@@ -86,7 +118,7 @@ public class WikiCrawler {
 			res = wc.crawl(false);
 
             // REMOVE THIS BREAK STATEMENT WHEN crawl() IS WORKING
-            break;
+//            break;
 		} while (res == null);
 		
 		Map<String, Integer> map = index.getCounts("the");
