@@ -72,22 +72,19 @@ public class WikiCrawler {
 
 		index.indexPage(url, paragraphs);
 
-
-		int c = 0;
-		c++;
-
-		Elements links = paragraphs.select("a");
-
-		for (Element l : links) {
-			if (l.attr("href").startsWith("/wiki") && !queue.contains(l.attr("abs:href")) && !l.attr("href").contains(":")) {
-				queue.offer(l.attr("abs:href"));
-				System.out.println(l.attr("abs:href"));
+		for (Element p : paragraphs) {
+			Elements links = p.select("a");
+			for (Element l : links) {
+				if (l.attr("href").startsWith("/wiki/")) {
+					queue.offer("https://en.wikipedia.org" + l.attr("href"));
+//					System.out.println(l.attr("href"));
+				}
 			}
 		}
 
-		System.out.println(queue.size());
+//		System.out.println(queue.size());
 
-		return source;
+		return url;
 	}
 	
 	/**
